@@ -1,8 +1,8 @@
 /** Angular Imports */
+import { HttpBackend, HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpBackend, HttpClient, HttpClientModule } from '@angular/common/http';
 
 /** Environment Configuration */
 
@@ -13,39 +13,39 @@ import { WebAppComponent } from './web-app.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 
 /** Custom Modules */
+import { PortalModule } from '@angular/cdk/portal';
+import { AccountingModule } from './accounting/accounting.module';
+import { CentersModule } from './centers/centers.module';
+import { ClientsModule } from './clients/clients.module';
+import { CollectionsModule } from './collections/collections.module';
+import { ConfigurationWizardModule } from './configuration-wizard/configuration-wizard.module';
 import { CoreModule } from './core/core.module';
+import { GroupsModule } from './groups/groups.module';
 import { HomeModule } from './home/home.module';
 import { LoginModule } from './login/login.module';
-import { SettingsModule } from './settings/settings.module';
 import { NavigationModule } from './navigation/navigation.module';
-import { ClientsModule } from './clients/clients.module';
-import { GroupsModule } from './groups/groups.module';
-import { CentersModule } from './centers/centers.module';
-import { AccountingModule } from './accounting/accounting.module';
-import { SystemModule } from './system/system.module';
-import { ProductsModule } from './products/products.module';
+import { NotificationsModule } from './notifications/notifications.module';
 import { OrganizationModule } from './organization/organization.module';
-import { TemplatesModule } from './templates/templates.module';
-import { UsersModule } from './users/users.module';
+import { ProductsModule } from './products/products.module';
+import { ProfileModule } from './profile/profile.module';
 import { ReportsModule } from './reports/reports.module';
 import { SearchModule } from './search/search.module';
-import { NotificationsModule } from './notifications/notifications.module';
-import { CollectionsModule } from './collections/collections.module';
-import { ProfileModule } from './profile/profile.module';
+import { SettingsModule } from './settings/settings.module';
+import { SystemModule } from './system/system.module';
 import { TasksModule } from './tasks/tasks.module';
-import { ConfigurationWizardModule } from './configuration-wizard/configuration-wizard.module';
-import { PortalModule } from '@angular/cdk/portal';
+import { TemplatesModule } from './templates/templates.module';
+import { UsersModule } from './users/users.module';
 
 /** Main Routing Module */
-import { AppRoutingModule } from './app-routing.module';
 import { DatePipe, LocationStrategy } from '@angular/common';
 import {
-  TranslateLoader,
-  TranslateModule,
   MissingTranslationHandler,
-  MissingTranslationHandlerParams
+  MissingTranslationHandlerParams,
+  TranslateLoader,
+  TranslateModule
 } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { AppRoutingModule } from './app-routing.module';
 
 export class CustomMissingTranslationHandler implements MissingTranslationHandler {
   handle(params: MissingTranslationHandlerParams): string {
@@ -71,7 +71,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         provide: TranslateLoader,
         useFactory: (httpBackend: HttpBackend, locationStrategy: LocationStrategy) => {
           const http = new HttpClient(httpBackend);
-          return new TranslateHttpLoader(http, `/assets/translations/`, '.json');
+          return new TranslateHttpLoader(http, `/cb/assets/translations/`, '.json');
         },
         deps: [
           HttpBackend,

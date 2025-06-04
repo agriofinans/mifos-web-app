@@ -20,6 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "baseHref": "/cb/",
             "aot": true,
             "outputPath": "dist/web-app",
             "index": "src/index.html",

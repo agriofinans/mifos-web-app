@@ -1,19 +1,19 @@
-(function(window) {
-  window["env"] = window["env"] || {};
+(function (window) {
+  window['env'] = window['env'] || {};
 
   // BackEnd Environment variables
-  window["env"]["fineractApiUrls"] = '';
-  window["env"]["fineractApiUrl"]  = '';
+  window['env']['fineractApiUrls'] = 'https://fineract.agr.ist';
+  window['env']['fineractApiUrl'] = 'https://fineract.agr.ist';
 
-  window["env"]["apiProvider"] = '';
-  window["env"]["apiVersion"]  = '';
+  window['env']['apiProvider'] = '';
+  window['env']['apiVersion'] = '';
 
-  window["env"]["fineractPlatformTenantId"]  = '';
-  window["env"]["fineractPlatformTenantIds"]  = '';
+  window['env']['fineractPlatformTenantId'] = 'clickfinance';
+  window['env']['fineractPlatformTenantIds'] = 'clickfinance';
 
   // Language Environment variables
-  window["env"]["defaultLanguage"] = '';
-  window["env"]["supportedLanguages"] = '';
+  window['env']['defaultLanguage'] = 'en-US';
+  window['env']['supportedLanguages'] = 'en-US';
 
   window['env']['preloadClients'] = '';
 
@@ -21,10 +21,10 @@
   window['env']['defaultCharDelimiter'] = '';
 
   // Display or not the BackEnd Info
-  window['env']['displayBackEndInfo'] = '';
+  window['env']['displayBackEndInfo'] = 'false';
 
   // Display or not the Tenant Selector
-  window['env']['displayTenantSelector'] = '';
+  window['env']['displayTenantSelector'] = 'false';
 
   // Time in seconds for Notifications, default 60 seconds
   window['env']['waitTimeForNotifications'] = '';
@@ -35,13 +35,12 @@
   // Time in milliseconds for Session idle timeout, default 300000 seconds
   window['env']['sessionIdleTimeout'] = '0';
 
-  // OAuth Server Enabled  
+  // OAuth Server Enabled
   window['env']['oauthServerEnabled'] = '';
 
-  // OAuth Server URL  
+  // OAuth Server URL
   window['env']['oauthServerUrl'] = '';
 
-  // OAuth Client Id  
+  // OAuth Client Id
   window['env']['oauthAppId'] = '';
-
 })(this);
