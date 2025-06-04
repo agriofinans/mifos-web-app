@@ -1,49 +1,47 @@
-###############
-### STAGE 1: Build app
-###############
-ARG BUILDER_IMAGE=node:22.9.0-alpine
-ARG NGINX_IMAGE=nginx:1.27.4-alpine3.21-slim
+# Use official node image as the base image
+FROM node:lts AS build
 
-FROM $BUILDER_IMAGE AS builder
-ARG NPM_REGISTRY_URL=https://registry.npmjs.org/
-ARG BUILD_ENVIRONMENT_OPTIONS="--configuration production"
-ARG PUPPETEER_DOWNLOAD_HOST_ARG=https://storage.googleapis.com
-ARG PUPPETEER_CHROMIUM_REVISION_ARG=1011831
-ARG PUPPETEER_SKIP_DOWNLOAD_ARG
+# ARG AGRIO_NPM_PAT
+ARG BASE_HREF=/
+# ENV AGRIO_NPM_PAT=$AGRIO_NPM_PAT
 
-# Set the environment variable to increase Node.js memory limit
-ENV NODE_OPTIONS="--max-old-space-size=4096"
+ADD ./package.json /tmp/package.json
+ADD ./package-lock.json /tmp/package-lock.json
+ADD ./version.js /tmp/version.js
+ADD ./src/environments/.env.ts /tmp/src/environments/.env.ts
 
-RUN apk add --no-cache git
+# ADD ./.npmrc /tmp/.npmrc
 
-WORKDIR /usr/src/app
+RUN cd /tmp && npm ci
+RUN mkdir -p /usr/local/app && cp -a /tmp/node_modules /usr/local/app/
 
-ENV PATH=/usr/src/app/node_modules/.bin:$PATH
+WORKDIR /usr/local/app
 
-# Export Puppeteer env variables for installation with non-default registry.
-ENV PUPPETEER_DOWNLOAD_HOST=$PUPPETEER_DOWNLOAD_HOST_ARG
-ENV PUPPETEER_CHROMIUM_REVISION=$PUPPETEER_CHROMIUM_REVISION_ARG
-ENV PUPPETEER_SKIP_DOWNLOAD=$PUPPETEER_SKIP_DOWNLOAD_ARG
+# Add the source code from the app to the container
+COPY ./ /usr/local/app/
 
-COPY ./ /usr/src/app/
+# Generate the build of the application
+# RUN npx ng build -c production
 
-RUN npm cache clear --force
+RUN npx ng build --configuration=production --base-href $BASE_HREF
+# ADD ./src/assets/env.template.js /usr/local/app/dist/assets/env.template.js
 
-RUN npm config set fetch-retry-maxtimeout 120000
-RUN npm config set registry $NPM_REGISTRY_URL --location=global
+# Stage 2: Serve app with nginx server
+# Use official nginx image as the base image
+FROM nginxinc/nginx-unprivileged
 
-RUN npm ci
+# Copy the build output to replace the default nginx contents.
+COPY --from=build /usr/local/app/dist/web-app /usr/share/nginx/html
 
-RUN sh -c "ng build --output-path=/dist $BUILD_ENVIRONMENT_OPTIONS"
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
-###############
-### STAGE 2: Serve app with nginx ###
-###############
-FROM $NGINX_IMAGE
+USER root
+RUN mkdir -p /usr/share/nginx/html/assets && \
+  chown -R 101:101 /usr/share/nginx/html/assets && \
+  chmod -R 755 /usr/share/nginx/html/assets
+USER 101
 
-COPY --from=builder /dist /usr/share/nginx/html
-
-EXPOSE 80
+EXPOSE 8080
 
 # When the container starts, replace the env.js with values from environment variables
-CMD ["/bin/sh",  "-c",  "envsubst < /usr/share/nginx/html/assets/env.template.js > /usr/share/nginx/html/assets/env.js && exec nginx -g 'daemon off;'"]
+CMD ["/bin/sh", "-c", "envsubst < /usr/share/nginx/html/assets/env.template.js > /usr/share/nginx/html/assets/env.js && exec nginx -g 'daemon off;'"]

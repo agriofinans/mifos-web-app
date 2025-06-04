@@ -1,8 +1,8 @@
 {
   "short_name": "MifosX",
   "name": "MifosX Web App",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "/cb/",
+  "scope": "/cb/",
   "theme_color": "#fff",
   "background_color": "#fff",
   "display": "standalone",

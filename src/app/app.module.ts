@@ -71,7 +71,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         provide: TranslateLoader,
         useFactory: (httpBackend: HttpBackend, locationStrategy: LocationStrategy) => {
           const http = new HttpClient(httpBackend);
-          return new TranslateHttpLoader(http, `/cb/assets/translations/`, '.json');
+          return new TranslateHttpLoader(http, `/cb//assets/translations/`, '.json');
         },
         deps: [
           HttpBackend,
